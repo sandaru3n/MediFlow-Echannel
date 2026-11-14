@@ -343,6 +343,13 @@ const auth = {
     emit("SIGNED_OUT");
     return { error: null };
   },
+  /** Demo only: open a dashboard as a sample account without signing in. */
+  async signInAsDemo(uid) {
+    if (!userObject(uid)) return { data: { user: null }, error: { message: "Unknown demo user" } };
+    setSessionUserId(uid);
+    emit("SIGNED_IN");
+    return { data: { user: userObject(uid) }, error: null };
+  },
 };
 
 // ---------------------------------------------------------------------------

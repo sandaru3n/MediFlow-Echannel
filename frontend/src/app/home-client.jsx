@@ -21,6 +21,9 @@ import {
   HeartPulse,
   KeyRound,
   Languages,
+  LayoutDashboard,
+  LogIn,
+  UserPlus,
   MousePointerClick,
   Search,
   ShieldCheck,
@@ -32,6 +35,7 @@ import hero from "@/assets/hero-doctor.jpg";
 import care from "@/assets/about.jpg";
 import { btnClass } from "@/components/kit";
 import { useT } from "@/i18n";
+import { homeFor, useAuth } from "@/lib/auth";
 import { useSpecialties } from "@/lib/data";
 import { specName } from "@/lib/utils";
 import { searchSchema } from "@/lib/validation";
@@ -131,6 +135,7 @@ function Hero({ specialties }) {
               </li>
             ))}
           </ul>
+          <AccountCta />
         </div>
         <div className="relative mx-auto w-full max-w-xl lg:pl-6">
           <div aria-hidden className="absolute -inset-3 rotate-3 rounded-[2rem] bg-hero opacity-20 lg:left-3" />
@@ -166,6 +171,31 @@ function Hero({ specialties }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function AccountCta() {
+  const { t } = useT();
+  const { user, roles, loading } = useAuth();
+  if (loading) return <div className="mt-6 h-12" aria-hidden />;
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-6 [&>a]:whitespace-nowrap">
+      {user && (
+        <Link href={homeFor(roles)} className={btnClass("primary", "h-12 px-5")}>
+          <LayoutDashboard className="size-4" aria-hidden />
+          {t("home.goDashboard")}
+        </Link>
+      )}
+      <Link href="/register" className={btnClass("teal", "h-12 px-5")}>
+        <UserPlus className="size-4" aria-hidden />
+        {t("home.createAccount")}
+      </Link>
+      <Link href="/login" className={btnClass("outline", "h-12 px-5")}>
+        <LogIn className="size-4" aria-hidden />
+        {t("common.signIn")}
+      </Link>
+      {!user && <span className="text-sm text-muted-foreground">{t("home.accountHint")}</span>}
+    </div>
   );
 }
 

@@ -74,6 +74,9 @@
     "cardSecureLabel": "පිවිසුම",
     "cardSecureValue": "එක් වරක් කේතය",
     "popular": "ජනප්‍රිය:",
+    "createAccount": "නොමිලේ ගිණුමක් සාදන්න",
+    "goDashboard": "මගේ උපකරණ පුවරුව",
+    "accountHint": "නොමිලේ · මුරපදයක් අවශ්‍ය නැත",
     "trust1": "තහවුරු කළ වෛද්‍යවරු",
     "trust2": "සජීවී වේලාවන්",
     "trust3": "මුරපද අවශ්‍ය නැත",
@@ -271,6 +274,7 @@
   "dash": {
     "patientTitle": "මගේ සෞඛ්‍යය",
     "patientRole": "රෝගියා",
+    "switchDashboard": "උපකරණ පුවරුව මාරු කරන්න",
     "overview": "දළ විශ්ලේෂණය",
     "appointments": "මගේ හමුවීම්",
     "reports": "රසායනාගාර වාර්තා",

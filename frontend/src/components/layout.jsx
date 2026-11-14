@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronDown, Globe, HeartPulse, LogIn, LogOut, Mail, Menu, Phone, UserRound, X } from "lucide-react";
+import { ChevronDown, Globe, HeartPulse, LogIn, LogOut, Mail, Menu, Phone, ShieldCheck, Stethoscope, UserRound, X } from "lucide-react";
 import { useT, LANGS } from "@/i18n";
 import { useAuth, homeFor } from "@/lib/auth";
+import { isDemoMode } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { btnClass } from "./kit";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
@@ -50,21 +51,26 @@ export function LangSwitch({ align = "end" }) {
 
 function AccountLink({ onNavigate, mobile = false }) {
   const { t } = useT();
-  const { user, roles, loading } = useAuth();
+  const { user, roles, loading, signOut } = useAuth();
   if (loading) return <span className="h-11 w-24" aria-hidden />;
   if (user)
     return (
-      <Link href={homeFor(roles)} onClick={onNavigate} className={btnClass("primary")}>
-        <UserRound className="size-4" aria-hidden />
-        {t("common.myAccount")}
-      </Link>
+      <span className="flex items-center gap-2">
+        <Link href={homeFor(roles)} onClick={onNavigate} className={btnClass("primary", "whitespace-nowrap")}>
+          <UserRound className="size-4" aria-hidden />
+          {t("common.myAccount")}
+        </Link>
+        <button type="button" onClick={signOut} className={btnClass("outline", "px-3")} aria-label={t("common.signOut")} title={t("common.signOut")}>
+          <LogOut className="size-4" aria-hidden />
+        </button>
+      </span>
     );
   return (
     <span className="flex items-center gap-2">
-      <Link href="/register" onClick={onNavigate} className={btnClass("outline", mobile ? "" : "hidden lg:inline-flex")}>
+      <Link href="/register" onClick={onNavigate} className={btnClass("outline", mobile ? "whitespace-nowrap" : "hidden whitespace-nowrap lg:inline-flex")}>
         {t("register.short")}
       </Link>
-      <Link href="/login" onClick={onNavigate} className={btnClass("primary")}>
+      <Link href="/login" onClick={onNavigate} className={btnClass("primary", "whitespace-nowrap")}>
         {t("common.signIn")}
       </Link>
     </span>
@@ -113,7 +119,7 @@ export function SiteHeader() {
               key={l.href}
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
-              className={cn("rounded-md px-3 py-2 font-medium hover:text-foreground", isActive(l.href) ? "text-primary" : "text-muted-foreground")}
+              className={cn("whitespace-nowrap rounded-md px-3 py-2 font-medium hover:text-foreground", isActive(l.href) ? "text-primary" : "text-muted-foreground")}
             >
               {l.label}
             </Link>
@@ -255,6 +261,36 @@ function SignOutButton() {
   );
 }
 
+function DashboardSwitch({ onNavigate }) {
+  const { t } = useT();
+  const pathname = usePathname();
+  const links = [
+    { href: "/dashboard", label: t("dash.patientRole"), icon: UserRound },
+    { href: "/doctor", label: t("doctorDash.role"), icon: Stethoscope },
+    { href: "/admin", label: t("admin.role_admin"), icon: ShieldCheck },
+  ];
+  return (
+    <div className="mt-4 border-t border-border pt-4">
+      <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("dash.switchDashboard")}</p>
+      {links.map(({ href, label, icon: I }) => (
+        <Link
+          key={href}
+          href={href}
+          onClick={onNavigate}
+          aria-current={pathname === href ? "page" : undefined}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
+            pathname === href ? "text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          )}
+        >
+          <I className="size-4" aria-hidden />
+          {label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 /** Sidebar layout for the patient, doctor and admin dashboards (from res/layout). */
 export function DashboardShell({ title, role, items, active, onSelect, children }) {
   const { t } = useT();
@@ -279,6 +315,7 @@ export function DashboardShell({ title, role, items, active, onSelect, children 
           {label}
         </button>
       ))}
+      {isDemoMode() && <DashboardSwitch onNavigate={() => setOpen(false)} />}
     </nav>
   );
   return (

@@ -74,6 +74,9 @@
     "cardSecureLabel": "Sign-in",
     "cardSecureValue": "One-time code",
     "popular": "Popular:",
+    "createAccount": "Create free account",
+    "goDashboard": "My dashboard",
+    "accountHint": "Free · no password needed",
     "trust1": "Verified doctors",
     "trust2": "Real-time slots",
     "trust3": "No passwords needed",
@@ -271,6 +274,7 @@
   "dash": {
     "patientTitle": "My Health",
     "patientRole": "Patient",
+    "switchDashboard": "Switch dashboard",
     "overview": "Overview",
     "appointments": "My Appointments",
     "reports": "Lab Reports",
